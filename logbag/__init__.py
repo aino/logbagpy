@@ -33,7 +33,6 @@ class Logger(object):
             kwargs=kwargs
             )
         thread.start()
-    __call__ = log
 
     def debug(self, message, **kwargs):
         self.log('debug', message, **kwargs)
