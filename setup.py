@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='logbagpy',
-    version='0.0.2',
+    name='logbag',
+    version='0.0.3',
     description='Cloud logging.',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
