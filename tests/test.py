@@ -25,16 +25,6 @@ class Thread(object):
     def start(self):
         self.target(*self.args, **self.kwargs)
 
-def write(s):
-    global msg
-    msg = s
-
-
-class StdErr(object):
-    def write(self, s):
-        global msg
-        msg = s
-
 
 stderr = sys.stderr # svae original
 urllib2.urlopen = urlopen
