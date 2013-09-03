@@ -26,7 +26,6 @@ class Thread(object):
         self.target(*self.args, **self.kwargs)
 
 
-stderr = sys.stderr # svae original
 urllib2.urlopen = urlopen
 urllib.urlencode = urlencode
 threading.Thread = Thread
@@ -71,11 +70,12 @@ class TestLogbagConsole(unittest.TestCase):
             msg = ''
             def write(me, msg):
                 self.msg = msg
+        self.stderr = sys.stderr
         sys.stderr = StdErr()
         self.log = logbag.ConsoleLogger()
 
     def tearDown(self):
-        sys.stderr = stderr
+        sys.stderr = self.stderr
 
     def test_console(self):
         self.log.warning('YO!')
