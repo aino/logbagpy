@@ -9,7 +9,7 @@ class TestCommand(test):
 
 setup(
     name='logbag',
-    version='0.0.5',
+    version='0.0.6',
     description='Cloud logging.',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',

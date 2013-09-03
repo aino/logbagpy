@@ -1,3 +1,4 @@
+import sys
 import urllib2
 from threading import Thread
 from urllib import urlencode
@@ -23,8 +24,24 @@ def stuff(url, user, log, level, message, **kwargs):
     urllib2.urlopen(url, urlencode(data))
 
 
+class BaseLogger(object):
+    def debug(self, message, **kwargs):
+        self.log('debug', message, **kwargs)
 
-class Logger(object):
+    def info(self, message, **kwargs):
+        self.log('info', message, **kwargs)
+
+    def warning(self, message, **kwargs):
+        self.log('warning', message, **kwargs)
+
+    def error(self, message, **kwargs):
+        self.log('error', message, **kwargs)
+
+    def critical(self, message, **kwargs):
+        self.log('critical', message, **kwargs)
+
+
+class Logger(BaseLogger):
     def __init__(self, url, user, log, min_level=None):
         self._url = url
         self._user = user
@@ -47,17 +64,11 @@ class Logger(object):
                 )
             thread.start()
 
-    def debug(self, message, **kwargs):
-        self.log('debug', message, **kwargs)
 
-    def info(self, message, **kwargs):
-        self.log('info', message, **kwargs)
+class ConsoleLogger(BaseLogger):
+    def log(self, level, message, **kwargs):
+        msg = '%s: %s' % (level, message)
+        for k, v in kwargs.iteritems():
+            msg += ', %s=%s' % (k, v)
+        sys.stderr.write(msg + '\n')
 
-    def warning(self, message, **kwargs):
-        self.log('warning', message, **kwargs)
-
-    def error(self, message, **kwargs):
-        self.log('error', message, **kwargs)
-
-    def critical(self, message, **kwargs):
-        self.log('critical', message, **kwargs)

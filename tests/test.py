@@ -25,7 +25,18 @@ class Thread(object):
     def start(self):
         self.target(*self.args, **self.kwargs)
 
+def write(s):
+    global msg
+    msg = s
 
+
+class StdErr(object):
+    def write(self, s):
+        global msg
+        msg = s
+
+
+stderr = sys.stderr # svae original
 urllib2.urlopen = urlopen
 urllib.urlencode = urlencode
 threading.Thread = Thread
@@ -39,7 +50,6 @@ import logbag
 
 
 class TestLogbag(unittest.TestCase):
-
     def setUp(self):
         self.log = logbag.Logger('url', 'user', 'log', 'info')
         global params
@@ -65,6 +75,30 @@ class TestLogbag(unittest.TestCase):
         self.assertEqual(params['data']['message'], 'yyy')
 
 
+class TestLogbagConsole(unittest.TestCase):
+    def setUp(self):
+        class StdErr(object):
+            msg = ''
+            def write(me, msg):
+                self.msg = msg
+        sys.stderr = StdErr()
+        self.log = logbag.ConsoleLogger()
+
+    def tearDown(self):
+        sys.stderr = stderr
+
+    def test_console(self):
+        self.log.warning('YO!')
+        self.assertEqual(self.msg, 'warning: YO!\n')
+
+    def test_console_kwargs(self):
+        self.log.error('braging', i='cool')
+        self.assertEqual(self.msg, 'error: braging, i=cool\n')
+
+
 def run_tests(verbosity=2):
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestLogbag)
+    suite = unittest.TestSuite()
+    loader = unittest.TestLoader()
+    suite.addTests(loader.loadTestsFromTestCase(TestLogbag))
+    suite.addTests(loader.loadTestsFromTestCase(TestLogbagConsole))
     unittest.TextTestRunner(verbosity=verbosity).run(suite)
