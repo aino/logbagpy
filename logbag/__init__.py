@@ -21,7 +21,7 @@ def stuff(url, user, log, level, message, **kwargs):
     for k, v in data.iteritems():
         if isinstance(data[k], unicode):
             data[k] = v.encode('utf-8')
-    urllib2.urlopen(url, urlencode(data))
+    urllib2.urlopen(url, urlencode(data), timeout=5)
 
 
 class BaseLogger(object):
