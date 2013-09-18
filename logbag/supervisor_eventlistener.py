@@ -46,6 +46,8 @@ DEFAULT_EVENT_LEVELS = {
     'PROCESS_STATE_EXITED': 'warning',
     'PROCESS_STATE_RUNNING': 'info',
     'PROCESS_STATE_STOPPED': 'info',
+    'SUPERVISOR_STATE_CHANGE_RUNNING': 'info',
+    'SUPERVISOR_STATE_CHANGE_STOPPING': 'info',
 }
 
 
@@ -54,8 +56,8 @@ class SupervisorEventListener:
         self.stdin = sys.stdin
         self.stdout = sys.stdout
         self.stderr = sys.stderr
-        self.event_levels = DEFAULT_EVENT_LEVELS.copy()
-        self.event_levels.update(event_levels or {})
+        self.event_levels = event_levels or DEFAULT_EVENT_LEVELS
+        print self.event_levels
         self.log = Logger(url, user, log)
 
     def runforever(self):
@@ -81,7 +83,12 @@ def main():
     for event in EVENTS:
         parser.add_argument('--%s' % event, choices=choices)
     args = parser.parse_args()
-    listener = SupervisorEventListener(args.url, args.user, args.log)
+    event_levels = {}
+    for event in EVENTS:
+        level = getattr(args, event)
+        if level:
+            event_levels[event] = level
+    listener = SupervisorEventListener(args.url, args.user, args.log, event_levels=event_levels)
     listener.runforever()
 
 
