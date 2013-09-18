@@ -1,11 +1,5 @@
 from setuptools import setup, find_packages
-from setuptools.command.test import test
 
-
-class TestCommand(test):
-    def run(self):
-        from tests.test import run_tests
-        run_tests()
 
 setup(
     name='logbag',
@@ -17,6 +11,8 @@ setup(
     license='BSD',
     url='https://github.com/aino/logbagpy',
     packages=find_packages(exclude=['tests', 'tests.*']),
+    tests_require=['supervisor>=3'],
+    test_suite='tests.test',
     zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -27,5 +23,4 @@ setup(
         'Programming Language :: Python',
         'Topic :: System :: Logging',
     ],
-    cmdclass={"test": TestCommand}
 )

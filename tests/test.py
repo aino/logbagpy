@@ -9,7 +9,7 @@ import threading
 params = {}
 
 # monkey patching
-def urlopen(url, data):
+def urlopen(url, data, **kwargs):
     global params
     params = {'url': url, 'data': data}
 
