@@ -57,7 +57,6 @@ class SupervisorEventListener:
         self.stdout = sys.stdout
         self.stderr = sys.stderr
         self.event_levels = event_levels or DEFAULT_EVENT_LEVELS
-        print self.event_levels
         self.log = Logger(url, user, log)
 
     def runforever(self):
