@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import ConfigParser
 import argparse
 import os
 import sys
@@ -78,11 +79,18 @@ def main():
     parser.add_argument('url', help='logbag url')
     parser.add_argument('user', help='logbag user')
     parser.add_argument('log', help='logbag log')
+    parser.add_argument('--config', '-c', help='configuration file')
     choices = ('debug', 'info', 'warning', 'error', 'critical')
     for event in EVENTS:
         parser.add_argument('--%s' % event, choices=choices)
     args = parser.parse_args()
     event_levels = {}
+    if args.config:
+        config = ConfigParser.SafeConfigParser()
+        config.read([args.config, os.path.expanduser('~/etc/%s' % args.config)])
+        for event in EVENTS:
+            if config.has_option('eventlevels', event):
+                event_levels[event] = config.get('eventlevels', event)
     for event in EVENTS:
         level = getattr(args, event)
         if level:

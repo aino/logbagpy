@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='logbag',
-    version='0.0.8',
+    version='0.0.9',
     description='Cloud logging.',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
