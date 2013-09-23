@@ -33,7 +33,7 @@ threading.Thread = Thread
 
 # path patch
 here = os.path.abspath( os.path.dirname(__file__) )
-sys.path[0:0] = ['../..', '..']
+sys.path[0:0] = [here + '/../..', here + '..']
 
 import logbag
 
